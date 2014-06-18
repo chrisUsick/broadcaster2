@@ -1,0 +1,32 @@
+﻿extends app
+include mixins
+
+block menu
+  li 
+    a(href='/broadcast#configure') configure
+  li 
+    a(href='/broadcast#preview') preview
+
+block content
+  #configure
+    .header
+      h1 Broadcast!
+      h2 configure your video
+
+    .content
+      p#time contents \ 
+      p Fill out some info before starting your broadcast
+      p You can change these settings later
+      form#config.pure-form.pure-form-aligned
+        fieldset
+          +cGroup("ID")
+          +cGroup("short Description")
+          .pure-controls
+            button#submit.pure-button.pure-button-primary(type="submit") Start Broadcast
+  #preview
+    .header
+      h1 Priview
+      h2 this is what your broadcast will look like to others
+    .content
+      p your video:
+      #video-container

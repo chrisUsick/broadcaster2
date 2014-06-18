@@ -1,0 +1,19 @@
+{
+  "name": "broadcaster",
+  "version": "0.0.0",
+  "description": "broadcaster",
+  "main": "app.js",
+  "author": {
+    "name": "e6410",
+    "email": ""
+  },
+  "dependencies": {
+    "express": "3.4.4",
+    "jade": "*",
+    "stylus": "*",
+	"morgan": "*",
+	"body-parser":"*",
+	"method-override":"*",
+	"errorhandler":"*"
+  }
+}

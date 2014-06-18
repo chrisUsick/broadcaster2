@@ -1,0 +1,22 @@
+﻿extends layout
+
+
+block head
+  
+  link(rel='stylesheet', href='stylesheets/side-menu.css')
+  script(src="deps/require.js")
+  script(src='config.js')
+  script.
+    require(['main'])
+
+block body
+  a.menu-link#menuLink(href='#menu')
+    span
+  #menu
+    .pure-menu.pure-menu-open
+      a.pure-menu-heading(href='/') Broadcaster
+      ul
+        block menu
+  #main
+    block content
+  script(src='ui.js')
