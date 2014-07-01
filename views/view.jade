@@ -1,0 +1,23 @@
+﻿extends app
+
+block menu 
+  li
+    a(href="#browse") Browse
+  li
+    a(href="#watching") Watching
+block content
+  #browse
+    .header
+      h1 Browse
+      h3 view all the broadcasts which are currently running
+    .content
+      p click on a broadcast to start watching.
+      ul#broadcastList
+  #watching
+    .header
+      h1 Watching
+      h3 currently watching: \
+        span#currentBroadcast
+    .content
+      #video-container
+  

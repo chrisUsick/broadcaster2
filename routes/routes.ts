@@ -10,3 +10,7 @@ export function home(req: e.Request, res: e.Response) {
 export function broadcast(req: e.Request, res: e.Response) {
     res.render("broadcast")
 }
+
+export function view(req, res) {
+    res.render("view")
+}

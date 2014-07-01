@@ -8,4 +8,9 @@ function broadcast(req, res) {
     res.render("broadcast");
 }
 exports.broadcast = broadcast;
+
+function view(req, res) {
+    res.render("view");
+}
+exports.view = view;
 //# sourceMappingURL=routes.js.map

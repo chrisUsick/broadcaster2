@@ -6,6 +6,9 @@ switch (app) {
     case 'broadcast':
         loadApp("BroadcastApp");
         break;
+    case 'view':
+        loadApp("ViewApp");
+        break;
     default:
         break;
 }

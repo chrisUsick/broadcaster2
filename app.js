@@ -6,6 +6,8 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require("method-override");
 var errorHandler = require("errorhandler");
+var socket = require('socket.io');
+var C = require('./collections');
 
 var app = express();
 
@@ -29,8 +31,28 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.home);
 app.get('/broadcast', routes.broadcast);
+app.get('/view', routes.view);
 
-http.createServer(app).listen(app.get('port'), function () {
+var server = http.createServer(app);
+server.listen(parseInt(app.get('port')), "192.168.1.47", function () {
     console.log('Express server listening on port ' + app.get('port'));
+});
+var bcIDs = new C.Dictionary();
+var io = socket.listen(server);
+io.on("connection", function (socket) {
+    socket.on("newBroadcast", function (pID, metaData) {
+        bcIDs.setValue(pID, metaData);
+        //socket.set("pID", pID)
+    });
+    socket.on("getBroadcastList", function (fn) {
+        var pIDs = new Array();
+        bcIDs.forEach(function (k, v) {
+            pIDs.push(v);
+        });
+        fn(pIDs);
+    });
+    socket.on("disconnect", function () {
+        console.log('socket disconnected', socket.id);
+    });
 });
 //# sourceMappingURL=app.js.map

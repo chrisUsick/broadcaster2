@@ -3,9 +3,9 @@ include mixins
 
 block menu
   li 
-    a(href='/broadcast#configure') configure
+    a(href='#configure') configure
   li 
-    a(href='/broadcast#preview') preview
+    a(href='#preview') preview
 
 block content
   #configure
@@ -19,14 +19,16 @@ block content
       p You can change these settings later
       form#config.pure-form.pure-form-aligned
         fieldset
-          +cGroup("ID")
-          +cGroup("short Description")
+          +cGroup("Broadcast Name", "ID")
+          +cGroup("Short Description", "description")
           .pure-controls
             button#submit.pure-button.pure-button-primary(type="submit") Start Broadcast
   #preview
     .header
-      h1 Priview
+      h1 Preview
       h2 this is what your broadcast will look like to others
     .content
-      p your video:
+      h3 your video:
       #video-container
+      h3 chat room
+      #chatRoomContainer

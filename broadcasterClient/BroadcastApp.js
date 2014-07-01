@@ -1,45 +1,21 @@
-﻿///<reference path="typings/jquery.d.ts"/>
-define(["require", "exports", "Greeter", "jquery", "collections", "Broadcast"], function(require, exports, Greeter, $, Collections, Broadcast) {
-    var BroadcastApp = (function () {
+﻿var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+define(["require", "exports", "Application", "Greeter", "jquery", "Broadcast", 'ViewManager', "ChatRoom"], function(require, exports, App, Greeter, $, Broadcast, VM, ChatRoom) {
+    var BroadcastApp = (function (_super) {
+        __extends(BroadcastApp, _super);
         function BroadcastApp() {
-            this.currentView = null;
-            this.views = new Collections.Dictionary();
+            _super.call(this, '192.168.1.47');
+            this.views = new VM("#main > div");
+            this.chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0]);
         }
         BroadcastApp.prototype.run = function () {
             var g = new Greeter(document.getElementById('time'));
             g.start();
-
-            this.configNavigation();
             this.formSubmit();
-        };
-
-        // set initial view, add event handlers for hashchange
-        BroadcastApp.prototype.configNavigation = function () {
-            var _this = this;
-            // add views to dictionary
-            $("#main > div").each(function (i, e) {
-                _this.views.setValue(e.getAttribute("id"), e);
-                if (i != 0) {
-                    // hide all but the first view
-                    $(e).hide();
-                }
-                if (i == 0) {
-                    _this.currentView = e;
-                    $(e).show();
-                }
-            });
-
-            // on hashchange, navigate to corresponding view
-            $(window).on("hashchange", function (e) {
-                var hash = e.target.location.hash.replace("#", '');
-
-                // hide old view
-                $(_this.currentView).hide();
-
-                // set new view and show
-                _this.currentView = _this.views.getValue(hash);
-                $(_this.currentView).show();
-            });
         };
 
         // make submit button in config form navigate to preview
@@ -48,14 +24,27 @@ define(["require", "exports", "Greeter", "jquery", "collections", "Broadcast"], 
             var _this = this;
             $("#config").submit(function (e) {
                 e.preventDefault();
-                var base = document.URL.split("#")[0];
-                location.assign(base + "#preview");
-                _this.broadcast = new Broadcast($("#video-container")[0]);
+                _this.views.navigateTo("#preview");
+                var metaData = {
+                    broadcastName: $("#ID", e.target).val(),
+                    description: $("#description", e.target).val()
+                };
+                _this.broadcast = new Broadcast($("#video-container")[0], metaData, _this.socket);
+
+                //chatroom config
+                _this.chatRoom.setChatName(metaData.broadcastName);
+                _this.broadcast.addMessageHandler(function (data) {
+                    if (data.from && data.msg) {
+                        _this.chatRoom.addMessage(data);
+                    }
+                });
+
+                //this.socket.emit("newBroadcast", )
                 $("button", e.target).attr("disabled", "true");
             });
         };
         return BroadcastApp;
-    })();
+    })(App);
 
     
     return BroadcastApp;

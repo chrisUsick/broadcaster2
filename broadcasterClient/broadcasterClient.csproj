@@ -23,8 +23,12 @@
     <TypeScriptCompile Include="Application.ts" />
     <TypeScriptCompile Include="BroadcastApp.ts" />
     <TypeScriptCompile Include="Broadcast.ts" />
+    <TypeScriptCompile Include="ChatRoom.ts" />
+    <Content Include="collections.ts" />
     <Content Include="deps\jquery.js" />
+    <Content Include="deps\peer.js" />
     <Content Include="deps\require.js" />
+    <TypeScriptCompile Include="ViewManager.ts" />
     <Content Include="TEST-index.html" />
     <TypeScriptCompile Include="main.ts" />
     <Content Include="stylesheets\pure-min.css" />
@@ -33,7 +37,9 @@
     <Content Include="typings\jquery.d.ts" />
     <TypeScriptCompile Include="typings\Navigator.d.ts" />
     <Content Include="typings\peer.d.ts" />
+    <Content Include="typings\socket.io-client.d.ts" />
     <Content Include="ui.js" />
+    <TypeScriptCompile Include="ViewApp.ts" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>

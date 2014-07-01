@@ -1,1 +1,1 @@
-{"version":3,"file":"Application.js","sourceRoot":"","sources":["Application.ts"],"names":[],"mappings":"AAAA;;;GASoB"}
+{"version":3,"file":"Application.js","sourceRoot":"","sources":["Application.ts"],"names":["Application","Application.constructor","Application.run"],"mappings":"AAAA;IAQA;QAGIA,qBAAYA,UAAkBA;YAC1BC,IAAIA,CAACA,MAAMA,GAACA,EAAEA,CAACA,OAAOA,CAACA,UAAUA,CAACA;QACtCA,CAACA;QAHDD,4BAAAA;QAAcE,CAACA;QAInBF,mBAACA;IAADA,CAACA,IAAA;;IACD,kBAAoB;GAAA"}
