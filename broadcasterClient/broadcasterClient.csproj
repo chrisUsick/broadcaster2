@@ -29,6 +29,7 @@
     <Content Include="deps\peer.js" />
     <Content Include="deps\require.js" />
     <TypeScriptCompile Include="ViewManager.ts" />
+    <TypeScriptCompile Include="PeerHandler.ts" />
     <Content Include="TEST-index.html" />
     <TypeScriptCompile Include="main.ts" />
     <Content Include="stylesheets\pure-min.css" />

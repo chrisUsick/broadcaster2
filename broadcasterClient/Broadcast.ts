@@ -2,26 +2,28 @@
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-import Peer = require('peer')
+//import Peer = require('peer')
 import io = require("socket.io-client")
+import PeerHandler = require("PeerHandler")
 
 class Broadcast {
     video:HTMLVideoElement
     parent:Element
     stream: MediaStream
-    peer: PeerObject
+    peer: PeerHandler
     userId: string
     socket: io.Socket
     metaData = {
-        peerId: ''
+        peerId:''
         , broadcastName: ''
         , description: ''
     }
     messageHandlers: Array<(data:any) => void> = []
-    constructor(parent:Element, metaData:any, socketRef:io.Socket){
+    constructor(parent:Element, metaData:any, socketRef:io.Socket, peerRef:PeerHandler){
         this.parent = parent
         this.metaData = metaData
         this.socket = socketRef
+        this.peer = peerRef
         this.video = document.createElement("video")
         this.video.setAttribute("muted","true")
         this.parent.appendChild(this.video)
@@ -45,36 +47,18 @@ class Broadcast {
         )
     }
     initPeer() {
-        this.peer = new Peer({ host: "localhost", port: 9000 })
 
-        this.peer.on("open", (id) => {
-            this.metaData.peerId = id
-            this.socket.emit("newBroadcast", id, this.metaData)
-        })
-        this.peer.on("call", (call:MediaConnection) => {
+        if (!this.peer.getPeer().disconnected) {
+            this.socket.emit("newBroadcast", this.peer.getPeer().id, this.metaData)
+        }
+        this.peer.addCallHandler((call:MediaConnection) => {
             call.answer(this.stream)
         })
-        this.peer.on("connection", (conn: DataConnection) => {
-            conn.on('data', (data) => {
-                if (data == 'metadata') {
-                    conn.send(this.metaData)
-                }
-                else if (data == 'callMe') {
-                    var call = this.peer.call(conn.peer, this.stream)
-
-                } else {
-                    this.messageHandlers.forEach((fn, i) => {
-                        fn(data)
-                    })
-                }
-            })
+        this.peer.addDataHandler((data, conn) => {
+            if (data == 'callMe') {
+                var call = this.peer.call(conn.peer, this.stream)
+            }
         })
-    }
-    /**
-    * @callback is passed the message
-    */
-    addMessageHandler(callback: (data: any) => void) {
-        this.messageHandlers.push(callback)
     }
 } 
 export = Broadcast

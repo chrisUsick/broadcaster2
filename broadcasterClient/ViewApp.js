@@ -4,18 +4,18 @@
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", "Application", "jquery", "ViewManager", 'peer'], function(require, exports, App, $, VM, Peer) {
+define(["require", "exports", "Application", "jquery", "ViewManager", 'PeerHandler'], function(require, exports, App, $, VM, PeerHandler) {
     var ViewApp = (function (_super) {
         __extends(ViewApp, _super);
         function ViewApp() {
             var _this = this;
             _super.call(this, "192.168.1.47");
             this.views = new VM("#main > div");
-            this.peer = new Peer({ host: "localhost", port: 9000 });
+            this.peer = new PeerHandler({ host: "localhost", port: 9000 });
             this.videoElement = document.createElement("video");
             $("#video-container").append(this.videoElement);
 
-            this.peer.on('call', function (call) {
+            this.peer.addCallHandler(function (call) {
                 call.answer();
                 call.on('stream', function (stream) {
                     _this.videoElement.setAttribute('src', URL.createObjectURL(stream));
@@ -35,19 +35,8 @@ define(["require", "exports", "Application", "jquery", "ViewManager", 'peer'], f
             });
         };
         ViewApp.prototype.connectToBroadcast = function (pID) {
-            //var call = this.peer.call(pID)
-            //call.on('stream', (stream) => {
-            //    this.videoElement.setAttribute('src', URL.createObjectURL(stream))
-            //    this.videoElement.play()
-            //})
-            //call.on('error', () => {
-            //    console.log('error')
-            //})
             // send request for the broadcast to call
-            var conn = this.peer.connect(pID);
-            conn.on('open', function () {
-                conn.send("callMe");
-            });
+            this.peer.sendData(pID, "callMe");
         };
         ViewApp.prototype.createPeerSnippet = function (data) {
             var _this = this;

@@ -1,5 +1,8 @@
-﻿import C = require("collections")
+﻿
+
+import C = require("collections")
 import $ = require("jquery")
+
 
 class ViewManager {
     private selector: string

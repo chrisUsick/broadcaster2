@@ -7,13 +7,16 @@ import Collections = require("collections")
 import Broadcast = require("Broadcast")
 import VM = require('ViewManager')
 import ChatRoom = require("ChatRoom")
+import PeerHandler = require("PeerHandler")
 
 class BroadcastApp extends App {
     views: VM = new VM("#main > div")
+    peer: PeerHandler = new PeerHandler({ host: "localhost", port: 9000 })
     broadcast: Broadcast
     chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0])
     constructor() {
         super('192.168.1.47')
+        
     }
     run() {
         var g = new Greeter(document.getElementById('time'))
@@ -27,14 +30,15 @@ class BroadcastApp extends App {
             e.preventDefault();
             this.views.navigateTo("#preview")
             var metaData = {
-                broadcastName: $("#ID", e.target).val()
+                peerId: this.peer.getPeer().id
+                , broadcastName: $("#ID", e.target).val()
                 , description: $("#description", e.target).val()
             }
-            this.broadcast = new Broadcast($("#video-container")[0], metaData, this.socket)
+            this.broadcast = new Broadcast($("#video-container")[0], metaData, this.socket, this.peer)
 
             //chatroom config
             this.chatRoom.setChatName(metaData.broadcastName)
-            this.broadcast.addMessageHandler((data) => {
+            this.peer.addDataHandler((data, conn) => {
                 if (data.from && data.msg) {
                     this.chatRoom.addMessage(data)
                 }
