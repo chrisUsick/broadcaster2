@@ -6,6 +6,8 @@
 
 - test on mobile browser
 - create chat interface
+    - delegate events from viewer to broadcaster to all other viewers
+    - broadcaster saves a copy of all messages so that a new viewers see them upon connecting
 - capture video for thumbnail
 
 

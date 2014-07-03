@@ -4,12 +4,14 @@ import $ = require("jquery")
 import VM = require("ViewManager")
 import PeerHandler = require('PeerHandler')
 import C = require('collections')
+import ChatRoom = require("ChatRoom")
 
 class ViewApp extends App {
     views: VM = new VM("#main > div")
     peer = new PeerHandler({ host: "localhost", port: 9000 })
     //peers: C.Dictionary<string, DataConnection> = new C.Dictionary<string,DataConnection>()
     videoElement: HTMLVideoElement
+    chatRoom: ChatRoom.ChatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer, "anonomous")
     constructor() {
         super("192.168.1.47")
         this.videoElement = document.createElement("video")

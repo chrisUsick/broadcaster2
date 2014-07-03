@@ -4,7 +4,7 @@
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", "Application", "jquery", "ViewManager", 'PeerHandler'], function(require, exports, App, $, VM, PeerHandler) {
+define(["require", "exports", "Application", "jquery", "ViewManager", 'PeerHandler', "ChatRoom"], function(require, exports, App, $, VM, PeerHandler, ChatRoom) {
     var ViewApp = (function (_super) {
         __extends(ViewApp, _super);
         function ViewApp() {
@@ -12,6 +12,7 @@ define(["require", "exports", "Application", "jquery", "ViewManager", 'PeerHandl
             _super.call(this, "192.168.1.47");
             this.views = new VM("#main > div");
             this.peer = new PeerHandler({ host: "localhost", port: 9000 });
+            this.chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer, "anonomous");
             this.videoElement = document.createElement("video");
             $("#video-container").append(this.videoElement);
 

@@ -13,10 +13,9 @@ class BroadcastApp extends App {
     views: VM = new VM("#main > div")
     peer: PeerHandler = new PeerHandler({ host: "localhost", port: 9000 })
     broadcast: Broadcast
-    chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0])
+    chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer)
     constructor() {
         super('192.168.1.47')
-        
     }
     run() {
         var g = new Greeter(document.getElementById('time'))
@@ -38,11 +37,6 @@ class BroadcastApp extends App {
 
             //chatroom config
             this.chatRoom.setChatName(metaData.broadcastName)
-            this.peer.addDataHandler((data, conn) => {
-                if (data.from && data.msg) {
-                    this.chatRoom.addMessage(data)
-                }
-            })
             //this.socket.emit("newBroadcast", )
             $("button", e.target).attr("disabled", "true")
         })

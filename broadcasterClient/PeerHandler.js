@@ -6,7 +6,6 @@
         */
         function PeerHandler(settings, onOpenCb) {
             var _this = this;
-            this.connection2s = [];
             this.connections = new C.Dictionary();
             this.dataHandlers = [];
             this.peer = new Peer(settings);
@@ -15,19 +14,33 @@
                     onOpenCb(id);
             });
             this.peer.on("connection", function (conn) {
-                _this.connections.setValue(conn.peer, conn);
-                conn.on("close", function () {
-                    _this.connections.remove(conn.peer);
-                });
-                conn.on("data", function (data) {
-                    _this.dataHandlers.forEach(function (cb, i) {
-                        cb(data, conn);
-                    });
-                });
+                // easy way to access first connection, or let the user set the 'main Connection'
+                console.log("peer connecting", conn.peer);
+                _this.createConnection(conn);
             });
         }
         PeerHandler.prototype.addConnection = function (conn) {
             this.connections.setValue(conn.peer, conn);
+        };
+        PeerHandler.prototype.removeConnection = function (peerId) {
+            this.connections.remove(peerId);
+        };
+        PeerHandler.prototype.createConnection = function (conn) {
+            var _this = this;
+            if (this.connections.isEmpty()) {
+                this.mainConnection = conn;
+            }
+            conn.on("close", function () {
+                _this.removeConnection(conn.peer);
+            });
+
+            conn.on("data", function (data) {
+                _this.dataHandlers.forEach(function (cb, i) {
+                    cb(data, conn);
+                });
+            });
+            this.addConnection(conn);
+            return conn;
         };
         PeerHandler.prototype.addDataHandler = function (dataHandler) {
             this.dataHandlers.push(dataHandler);
@@ -45,9 +58,19 @@
         };
         PeerHandler.prototype.sendData = function (peerId, data) {
             var conn = this.peer.connect(peerId);
+            this.createConnection(conn);
             conn.on("open", function () {
                 conn.send(data);
             });
+        };
+        PeerHandler.prototype.getConnections = function () {
+            return this.connections;
+        };
+        PeerHandler.prototype.getMainConnection = function () {
+            return this.mainConnection;
+        };
+        PeerHandler.prototype.setMainConnection = function (conn) {
+            this.mainConnection = conn;
         };
         return PeerHandler;
     })();

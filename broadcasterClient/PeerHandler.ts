@@ -2,32 +2,45 @@
 import C = require("collections")
 class PeerHandler {
     private peer: PeerObject
-    private connection2s: Array<DataConnection> = []
+    private mainConnection:DataConnection
     private connections: C.Dictionary<string, DataConnection> = new C.Dictionary<string, DataConnection>()
     private dataHandlers: Array<Function> = []
     /**
     * @settings settings to pass to the `peer` object
     * i.e. {host:"localhost",...}
     */
-    constructor(settings: any, onOpenCb?: (id:string)=>void) {
+    constructor(settings: any, onOpenCb?: (id: string) => void) {
         this.peer = new Peer(settings)
         this.peer.on("open", (id) => {
             if (onOpenCb) onOpenCb(id)
         })
         this.peer.on("connection", (conn: DataConnection) => {
-            this.connections.setValue(conn.peer, conn)
-            conn.on("close", () => {
-                this.connections.remove(conn.peer)
-            })
-            conn.on("data", (data: any) => {
-                this.dataHandlers.forEach((cb, i) => {
-                    cb(data, conn)
-                })
-            })
+            // easy way to access first connection, or let the user set the 'main Connection'
+            console.log("peer connecting", conn.peer)
+            this.createConnection(conn)
         })
     }
     private addConnection(conn: DataConnection) {
         this.connections.setValue(conn.peer, conn)
+    }
+    private removeConnection(peerId:string) {
+        this.connections.remove(peerId)
+    }
+    createConnection(conn: DataConnection) {
+        if (this.connections.isEmpty()) {
+            this.mainConnection = conn
+        }
+        conn.on("close", () => {
+            this.removeConnection(conn.peer)
+        })
+
+        conn.on("data", (data: any) => {
+            this.dataHandlers.forEach((cb, i) => {
+                cb(data, conn)
+            })
+        })
+        this.addConnection(conn)
+        return conn
     }
     addDataHandler(dataHandler: (data: any, conn:DataConnection) => void) {
         this.dataHandlers.push(dataHandler)
@@ -45,9 +58,19 @@ class PeerHandler {
     }
     sendData(peerId: string, data:any) {
         var conn = this.peer.connect(peerId)
+        this.createConnection(conn)
         conn.on("open", () => {
             conn.send(data)
         })
+    }
+    getConnections() {
+        return this.connections
+    }
+    getMainConnection(): DataConnection {
+        return this.mainConnection
+    }
+    setMainConnection(conn:DataConnection): void {
+        this.mainConnection = conn
     }
 } 
 
