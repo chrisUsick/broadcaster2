@@ -2,7 +2,7 @@
 import C = require("collections")
 class PeerHandler {
     private peer: PeerObject
-    private mainConnection:DataConnection
+    private mainConnection:string
     private connections: C.Dictionary<string, DataConnection> = new C.Dictionary<string, DataConnection>()
     private dataHandlers: Array<Function> = []
     /**
@@ -27,9 +27,9 @@ class PeerHandler {
         this.connections.remove(peerId)
     }
     createConnection(conn: DataConnection) {
-        if (this.connections.isEmpty()) {
-            this.mainConnection = conn
-        }
+        //if (this.connections.isEmpty()) {
+        //    this.mainConnection = conn
+        //}
         conn.on("close", () => {
             this.removeConnection(conn.peer)
         })
@@ -56,21 +56,40 @@ class PeerHandler {
     call(peerId: string, stream: MediaStream) {
         this.peer.call(peerId, stream)
     }
-    sendData(peerId: string, data:any) {
-        var conn = this.peer.connect(peerId)
-        this.createConnection(conn)
-        conn.on("open", () => {
+    /**
+    * @makeMainConnection if true, set this connection be the `mainConnection`
+    */
+    sendData(peerId: string, data:any, makeMainConnection?:boolean) {
+        if (makeMainConnection) {this.setMainConnection(peerId)}
+        if (this.connections.containsKey(peerId)){
+            var conn = this.connections.getValue(peerId)
+            
             conn.send(data)
+        } else {
+            var conn = this.peer.connect(peerId)
+            
+            conn.on("open", () => {
+                this.createConnection(conn)
+                conn.send(data)
+            })
+        }
+    }
+    /**
+    * send data to all connections
+    */
+    sendToAll(msg) {
+        this.connections.forEach((pID, conn) => {
+            this.sendData(pID, msg)
         })
     }
     getConnections() {
         return this.connections
     }
     getMainConnection(): DataConnection {
-        return this.mainConnection
+        return this.connections.getValue(this.mainConnection)
     }
-    setMainConnection(conn:DataConnection): void {
-        this.mainConnection = conn
+    setMainConnection(pID:string): void {
+        this.mainConnection = pID
     }
 } 
 

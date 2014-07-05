@@ -37,7 +37,7 @@ define(["require", "exports", "Application", "jquery", "ViewManager", 'PeerHandl
         };
         ViewApp.prototype.connectToBroadcast = function (pID) {
             // send request for the broadcast to call
-            this.peer.sendData(pID, "callMe");
+            this.peer.sendData(pID, "callMe", true);
         };
         ViewApp.prototype.createPeerSnippet = function (data) {
             var _this = this;

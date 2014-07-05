@@ -27,9 +27,9 @@
         };
         PeerHandler.prototype.createConnection = function (conn) {
             var _this = this;
-            if (this.connections.isEmpty()) {
-                this.mainConnection = conn;
-            }
+            //if (this.connections.isEmpty()) {
+            //    this.mainConnection = conn
+            //}
             conn.on("close", function () {
                 _this.removeConnection(conn.peer);
             });
@@ -56,21 +56,46 @@
         PeerHandler.prototype.call = function (peerId, stream) {
             this.peer.call(peerId, stream);
         };
-        PeerHandler.prototype.sendData = function (peerId, data) {
-            var conn = this.peer.connect(peerId);
-            this.createConnection(conn);
-            conn.on("open", function () {
+
+        /**
+        * @makeMainConnection if true, set this connection be the `mainConnection`
+        */
+        PeerHandler.prototype.sendData = function (peerId, data, makeMainConnection) {
+            var _this = this;
+            if (makeMainConnection) {
+                this.setMainConnection(peerId);
+            }
+            if (this.connections.containsKey(peerId)) {
+                var conn = this.connections.getValue(peerId);
+
                 conn.send(data);
+            } else {
+                var conn = this.peer.connect(peerId);
+
+                conn.on("open", function () {
+                    _this.createConnection(conn);
+                    conn.send(data);
+                });
+            }
+        };
+
+        /**
+        * send data to all connections
+        */
+        PeerHandler.prototype.sendToAll = function (msg) {
+            var _this = this;
+            this.connections.forEach(function (pID, conn) {
+                _this.sendData(pID, msg);
             });
         };
         PeerHandler.prototype.getConnections = function () {
             return this.connections;
         };
         PeerHandler.prototype.getMainConnection = function () {
-            return this.mainConnection;
+            return this.connections.getValue(this.mainConnection);
         };
-        PeerHandler.prototype.setMainConnection = function (conn) {
-            this.mainConnection = conn;
+        PeerHandler.prototype.setMainConnection = function (pID) {
+            this.mainConnection = pID;
         };
         return PeerHandler;
     })();

@@ -16,6 +16,7 @@ class BroadcastApp extends App {
     chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer)
     constructor() {
         super('192.168.1.47')
+
     }
     run() {
         var g = new Greeter(document.getElementById('time'))
@@ -34,7 +35,9 @@ class BroadcastApp extends App {
                 , description: $("#description", e.target).val()
             }
             this.broadcast = new Broadcast($("#video-container")[0], metaData, this.socket, this.peer)
-
+            this.chatRoom.addNewMessageHandler((msg) => {
+                this.peer.sendToAll(msg)
+            })
             //chatroom config
             this.chatRoom.setChatName(metaData.broadcastName)
             //this.socket.emit("newBroadcast", )

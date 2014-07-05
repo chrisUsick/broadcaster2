@@ -13,6 +13,7 @@ export class ChatRoom {
         .append($("<input/>", { type: "text", placeholder: "type to add a message" }))
         .append($("<button/>", { type: "submit", text: "send" }))[0]
     peer:PeerHandler
+    newMessageHandlers: Array<(msg:Message) => void> = []
     /**
     *@elem the container of the chatRoom class
     */
@@ -24,16 +25,23 @@ export class ChatRoom {
         
         $(this.container).append(this.newMsgForm)
         // when a new message is added
-        $(this.newMsgForm).submit((e) => {
+
+        var self = this
+        $(self.newMsgForm).submit((e) => {
             // add message to your own feed
             e.preventDefault()
             var msg = { from: '', msg: '' }
-            msg.from = this.chatName
+            msg.from = self.chatName
             msg.msg = $("input", e.target).val()
-            this.addMessage(msg)
+            
 
             // send to broadcast peer
-            this.peer.sendData(this.peer.getMainConnection().peer, msg)
+            if(self.peer.getMainConnection()) {
+                self.peer.sendData(self.peer.getMainConnection().peer, msg)
+            } else {
+                // only add the message if this peer IS the main peer, i.e. this.peer.getMainConnection() is undefined
+                self.addMessage(msg)
+            }
         })
 
         //handle uploading messages
@@ -44,18 +52,22 @@ export class ChatRoom {
         })
     }
     addMessage(msg: Message) {
+        this.newMessageHandlers.forEach((cb, i) => {
+            cb(msg)
+        })
         $("<li/>").append($("<span/>", { text: msg.from + ": ", class:"messageFrom"}))
             .append($("<span/>", { text: msg.msg, class: "messageContent" })).appendTo($(this.ul))
     }
     // do something when a message is added
-    newMessageHandler(callback:(msg: Message) => void) {
-        $(this.newMsgForm).submit((e) => {
-            e.preventDefault()
-            var msg = {from:'', msg:''}
-            msg.from = this.chatName
-            msg.msg = $("input", e.target).val()
-            callback(msg)
-        })
+    addNewMessageHandler(newMessageHandler:(msg: Message) => void) {
+        //$(this.newMsgForm).submit((e) => {
+        //    e.preventDefault()
+        //    var msg = {from:'', msg:''}
+        //    msg.from = this.chatName
+        //    msg.msg = $("input", e.target).val()
+        //    newMessageHandler(msg)
+        //})
+        this.newMessageHandlers.push(newMessageHandler)
     }
     /**
     * returns the old name

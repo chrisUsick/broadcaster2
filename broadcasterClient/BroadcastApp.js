@@ -32,6 +32,9 @@ define(["require", "exports", "Application", "Greeter", "jquery", "Broadcast", '
                     description: $("#description", e.target).val()
                 };
                 _this.broadcast = new Broadcast($("#video-container")[0], metaData, _this.socket, _this.peer);
+                _this.chatRoom.addNewMessageHandler(function (msg) {
+                    _this.peer.sendToAll(msg);
+                });
 
                 //chatroom config
                 _this.chatRoom.setChatName(metaData.broadcastName);

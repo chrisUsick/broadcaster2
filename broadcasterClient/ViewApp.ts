@@ -40,7 +40,7 @@ class ViewApp extends App {
     }
     connectToBroadcast(pID: string) {
         // send request for the broadcast to call
-        this.peer.sendData(pID, "callMe")
+        this.peer.sendData(pID, "callMe", true)
 
     }
     createPeerSnippet(data) {

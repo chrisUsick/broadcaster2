@@ -9,6 +9,7 @@
             this.newMsgForm = $("<form/>", { submit: function (e) {
                     e.preventDefault();
                 } }).append($("<input/>", { type: "text", placeholder: "type to add a message" })).append($("<button/>", { type: "submit", text: "send" }))[0];
+            this.newMessageHandlers = [];
             if (chatName) {
                 this.chatName = chatName;
             }
@@ -19,16 +20,21 @@
             $(this.container).append(this.newMsgForm);
 
             // when a new message is added
-            $(this.newMsgForm).submit(function (e) {
+            var self = this;
+            $(self.newMsgForm).submit(function (e) {
                 // add message to your own feed
                 e.preventDefault();
                 var msg = { from: '', msg: '' };
-                msg.from = _this.chatName;
+                msg.from = self.chatName;
                 msg.msg = $("input", e.target).val();
-                _this.addMessage(msg);
 
                 // send to broadcast peer
-                _this.peer.sendData(_this.peer.getMainConnection().peer, msg);
+                if (self.peer.getMainConnection()) {
+                    self.peer.sendData(self.peer.getMainConnection().peer, msg);
+                } else {
+                    // only add the message if this peer IS the main peer, i.e. this.peer.getMainConnection() is undefined
+                    self.addMessage(msg);
+                }
             });
 
             //handle uploading messages
@@ -39,19 +45,22 @@
             });
         }
         ChatRoom.prototype.addMessage = function (msg) {
+            this.newMessageHandlers.forEach(function (cb, i) {
+                cb(msg);
+            });
             $("<li/>").append($("<span/>", { text: msg.from + ": ", class: "messageFrom" })).append($("<span/>", { text: msg.msg, class: "messageContent" })).appendTo($(this.ul));
         };
 
         // do something when a message is added
-        ChatRoom.prototype.newMessageHandler = function (callback) {
-            var _this = this;
-            $(this.newMsgForm).submit(function (e) {
-                e.preventDefault();
-                var msg = { from: '', msg: '' };
-                msg.from = _this.chatName;
-                msg.msg = $("input", e.target).val();
-                callback(msg);
-            });
+        ChatRoom.prototype.addNewMessageHandler = function (newMessageHandler) {
+            //$(this.newMsgForm).submit((e) => {
+            //    e.preventDefault()
+            //    var msg = {from:'', msg:''}
+            //    msg.from = this.chatName
+            //    msg.msg = $("input", e.target).val()
+            //    newMessageHandler(msg)
+            //})
+            this.newMessageHandlers.push(newMessageHandler);
         };
 
         /**
