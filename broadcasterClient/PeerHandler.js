@@ -8,6 +8,7 @@
             var _this = this;
             this.connections = new C.Dictionary();
             this.dataHandlers = [];
+            this.onOpenHandlers = [];
             this.peer = new Peer(settings);
             this.peer.on("open", function (id) {
                 if (onOpenCb)
@@ -30,6 +31,11 @@
             //if (this.connections.isEmpty()) {
             //    this.mainConnection = conn
             //}
+            conn.on("open", function () {
+                _this.onOpenHandlers.forEach(function (fn, i) {
+                    fn(conn);
+                });
+            });
             conn.on("close", function () {
                 _this.removeConnection(conn.peer);
             });
@@ -52,6 +58,9 @@
             this.peer.on("call", function (call) {
                 callHandler(call);
             });
+        };
+        PeerHandler.prototype.addOnOpenHandler = function (fn) {
+            this.onOpenHandlers.push(fn);
         };
         PeerHandler.prototype.call = function (peerId, stream) {
             this.peer.call(peerId, stream);

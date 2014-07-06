@@ -8,10 +8,21 @@ define(["require", "exports", "Application", "Greeter", "jquery", "Broadcast", '
     var BroadcastApp = (function (_super) {
         __extends(BroadcastApp, _super);
         function BroadcastApp() {
+            var _this = this;
             _super.call(this, '192.168.1.47');
             this.views = new VM("#main > div");
             this.peer = new PeerHandler({ host: "localhost", port: 9000 });
             this.chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer);
+            this.messages = [];
+            this.chatRoom.addNewMessageHandler(function (msg) {
+                _this.peer.sendToAll(msg);
+                _this.messages.push(msg);
+            });
+            this.peer.addOnOpenHandler(function (conn) {
+                _this.messages.forEach(function (msg, i) {
+                    _this.peer.sendData(conn.peer, msg);
+                });
+            });
         }
         BroadcastApp.prototype.run = function () {
             var g = new Greeter(document.getElementById('time'));
@@ -32,9 +43,6 @@ define(["require", "exports", "Application", "Greeter", "jquery", "Broadcast", '
                     description: $("#description", e.target).val()
                 };
                 _this.broadcast = new Broadcast($("#video-container")[0], metaData, _this.socket, _this.peer);
-                _this.chatRoom.addNewMessageHandler(function (msg) {
-                    _this.peer.sendToAll(msg);
-                });
 
                 //chatroom config
                 _this.chatRoom.setChatName(metaData.broadcastName);

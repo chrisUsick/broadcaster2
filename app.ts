@@ -42,12 +42,17 @@ server.listen(parseInt(app.get('port')), "192.168.1.47", function () {
 var bcIDs: C.Dictionary<string, any> = new C.Dictionary<string, any>()
 var io = socket.listen(server)
 io.on("connection", (socket:socket.Socket) => {
-    socket.on("newBroadcast", (pID, metaData) => {
-        bcIDs.setValue(pID, metaData)
+    socket.on("newBroadcast", (metaData) => {
+        bcIDs.setValue(socket.id, metaData)
+        io.sockets.emit('updateBroadcast', metaData)
         //socket.set("pID", pID)
     })
+    socket.on("updateMetaData", (data) => {
+        bcIDs.setValue(socket.id, data)
+        io.sockets.emit("updateBroadcast", data)
+    })
     socket.on("getBroadcastList", (fn) => {
-        var pIDs = new Array<string>()
+        var pIDs = []
         bcIDs.forEach((k, v) => {
             pIDs.push(v)
         })
@@ -55,5 +60,7 @@ io.on("connection", (socket:socket.Socket) => {
     })
     socket.on("disconnect", () => {
         console.log('socket disconnected', socket.id)
+        io.sockets.emit("deleteBroadcast", bcIDs.getValue(socket.id))
+        bcIDs.remove(socket.id)
     })
 })

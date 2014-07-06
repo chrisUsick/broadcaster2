@@ -5,6 +5,7 @@ class PeerHandler {
     private mainConnection:string
     private connections: C.Dictionary<string, DataConnection> = new C.Dictionary<string, DataConnection>()
     private dataHandlers: Array<Function> = []
+    private onOpenHandlers: Array<Function> = []
     /**
     * @settings settings to pass to the `peer` object
     * i.e. {host:"localhost",...}
@@ -30,6 +31,11 @@ class PeerHandler {
         //if (this.connections.isEmpty()) {
         //    this.mainConnection = conn
         //}
+        conn.on("open", () => {
+            this.onOpenHandlers.forEach((fn, i) => {
+                fn(conn)
+            })
+        })
         conn.on("close", () => {
             this.removeConnection(conn.peer)
         })
@@ -52,6 +58,9 @@ class PeerHandler {
         this.peer.on("call", (call: MediaConnection) => {
             callHandler(call)
         })
+    }
+    addOnOpenHandler(fn:(conn:DataConnection) => void) {
+        this.onOpenHandlers.push(fn)
     }
     call(peerId: string, stream: MediaStream) {
         this.peer.call(peerId, stream)

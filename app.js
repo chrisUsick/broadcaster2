@@ -40,12 +40,17 @@ server.listen(parseInt(app.get('port')), "192.168.1.47", function () {
 var bcIDs = new C.Dictionary();
 var io = socket.listen(server);
 io.on("connection", function (socket) {
-    socket.on("newBroadcast", function (pID, metaData) {
-        bcIDs.setValue(pID, metaData);
+    socket.on("newBroadcast", function (metaData) {
+        bcIDs.setValue(socket.id, metaData);
+        io.sockets.emit('updateBroadcast', metaData);
         //socket.set("pID", pID)
     });
+    socket.on("updateMetaData", function (data) {
+        bcIDs.setValue(socket.id, data);
+        io.sockets.emit("updateBroadcast", data);
+    });
     socket.on("getBroadcastList", function (fn) {
-        var pIDs = new Array();
+        var pIDs = [];
         bcIDs.forEach(function (k, v) {
             pIDs.push(v);
         });
@@ -53,6 +58,8 @@ io.on("connection", function (socket) {
     });
     socket.on("disconnect", function () {
         console.log('socket disconnected', socket.id);
+        io.sockets.emit("deleteBroadcast", bcIDs.getValue(socket.id));
+        bcIDs.remove(socket.id);
     });
 });
 //# sourceMappingURL=app.js.map

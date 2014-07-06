@@ -9,6 +9,9 @@ import PeerHandler = require("PeerHandler")
 class Broadcast {
     video:HTMLVideoElement
     parent:Element
+    capture:HTMLElement = document.createElement("button")
+    canvas:HTMLCanvasElement = document.createElement("canvas")
+    thumbnail:HTMLElement = document.createElement("image")
     stream: MediaStream
     peer: PeerHandler
     userId: string
@@ -17,6 +20,7 @@ class Broadcast {
         peerId:''
         , broadcastName: ''
         , description: ''
+        , thumbnail:''
     }
     messageHandlers: Array<(data:any) => void> = []
     constructor(parent:Element, metaData:any, socketRef:io.Socket, peerRef:PeerHandler){
@@ -27,10 +31,15 @@ class Broadcast {
         this.video = document.createElement("video")
         this.video.setAttribute("muted","true")
         this.parent.appendChild(this.video)
+        this.capture.textContent = "capture your screen for a thumbnail"
+        this.parent.appendChild(this.capture)
+        this.thumbnail.setAttribute("width","50")
+        this.parent.appendChild(this.thumbnail)
         this.getMedia(() => {
             this.video.setAttribute('src', URL.createObjectURL(this.stream))
             this.video.play()
             this.initPeer()
+            this.capture.onclick = () => {this.setThumbnail()}
         })
         
         
@@ -49,7 +58,7 @@ class Broadcast {
     initPeer() {
 
         if (!this.peer.getPeer().disconnected) {
-            this.socket.emit("newBroadcast", this.peer.getPeer().id, this.metaData)
+            this.socket.emit("newBroadcast", this.metaData)
         }
         this.peer.addCallHandler((call:MediaConnection) => {
             call.answer(this.stream)
@@ -59,6 +68,16 @@ class Broadcast {
                 var call = this.peer.call(conn.peer, this.stream)
             }
         })
+    }
+    setThumbnail() {
+        this.parent.appendChild(this.canvas)
+        this.canvas.getContext("2d").drawImage(this.video, 0, 0, 50,50)
+        var img = this.canvas.toDataURL("image/png")
+        this.thumbnail.src = img
+        this.metaData.thumbnail = img
+        this.socket.emit("updateMetaData", this.metaData)
+
+
     }
 } 
 export = Broadcast

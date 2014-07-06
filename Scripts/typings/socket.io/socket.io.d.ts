@@ -63,6 +63,7 @@ declare module "socket.io" {
     of(nsp: string): SocketNamespace;
     on(ns: string, fn: Function): SocketManager;
     sockets: SocketNamespace;
+    emit(ns:string, data:any)
   }
 
 

@@ -56,7 +56,7 @@ export class ChatRoom {
             cb(msg)
         })
         $("<li/>").append($("<span/>", { text: msg.from + ": ", class:"messageFrom"}))
-            .append($("<span/>", { text: msg.msg, class: "messageContent" })).appendTo($(this.ul))
+            .append($("<span/>", { text: msg.msg, class: "messageContent" })).prependTo($(this.ul))
     }
     // do something when a message is added
     addNewMessageHandler(newMessageHandler:(msg: Message) => void) {

@@ -1,11 +1,14 @@
 ﻿1. TODO for first release
 
 - test on mobile browser
-- create chat interface : started
+= capture video for thumbnail
+- create production deployment
+= server sends messages on peer Info updates.
+- style a little
+= create chat interface : started
     = delegate events from viewer to broadcaster to all other viewers
-    - broadcaster saves a copy of all messages so that a new viewers see them upon connecting
-- capture video for thumbnail
-- server sends messages on peer Info updates.
+    = broadcaster saves a copy of all messages so that a new viewers see them upon connecting
+
 = create Abstraction for `peer` object  in BroadcastApp
     PeerHandler is the abstaction class; it needs the following methods
         - manage all connections. Allow doing things like broadcast message to all connections

@@ -48,7 +48,7 @@
             this.newMessageHandlers.forEach(function (cb, i) {
                 cb(msg);
             });
-            $("<li/>").append($("<span/>", { text: msg.from + ": ", class: "messageFrom" })).append($("<span/>", { text: msg.msg, class: "messageContent" })).appendTo($(this.ul));
+            $("<li/>").append($("<span/>", { text: msg.from + ": ", class: "messageFrom" })).append($("<span/>", { text: msg.msg, class: "messageContent" })).prependTo($(this.ul));
         };
 
         // do something when a message is added
