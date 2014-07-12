@@ -12,7 +12,7 @@ class ViewApp extends App {
     //peers: C.Dictionary<string, DataConnection> = new C.Dictionary<string,DataConnection>()
     videoElement: HTMLVideoElement
     chatRoom: ChatRoom.ChatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer, "anonomous")
-    broadcastList: C.Dictionary<string, Element> = new C.Dictionary<string, any>()
+    broadcastList: C.Dictionary<string, Element> = new C.Dictionary<string, Element>()
     constructor() {
         super("192.168.1.47")
         this.videoElement = document.createElement("video")
@@ -53,15 +53,18 @@ class ViewApp extends App {
     }
     createPeerSnippet(data) {
         var ul = $("#broadcastList")
-        var li = $("<li/>", {
+        var li = this.broadcastList.containsKey(data.peerId)  
+            ? this.broadcastList.getValue(data.peerId)  
+            : $("<li/>", {
             click: (e) => {
                 this.views.navigateTo("#watching")
                 this.connectToBroadcast(data.peerId)
-            }
-        }).append($("<p/>", { text: data.broadcastName }))
+            } 
+        })[0]
+        $(li).append($("<p/>", { text: data.broadcastName }))
           .append($("<p/>", { text: data.description }))
             .append($('<img/>', { src: data.thumbnail }))
-            .appendTo(ul)[0]
+            .appendTo(ul)
         this.broadcastList.setValue(data.peerId, li)
     }
 }

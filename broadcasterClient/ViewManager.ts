@@ -14,7 +14,7 @@ class ViewManager {
 
         this.selector = selector
         // add each div to dictionary
-        var hash = location.hash
+        var hash = location.hash != "" && location.hash != undefined ? location.hash.match(/#[\w]+/)[0] : ""
         $(this.selector).each((i, e) => {
             var id = "#" + e.getAttribute("id")
             this.views.setValue(id, e)

@@ -1,10 +1,12 @@
 ﻿1. TODO for first release
 
+- create home page
 - test on mobile browser
 = capture video for thumbnail
 - create production deployment
 = server sends messages on peer Info updates.
 - style a little
+
 = create chat interface : started
     = delegate events from viewer to broadcaster to all other viewers
     = broadcaster saves a copy of all messages so that a new viewers see them upon connecting

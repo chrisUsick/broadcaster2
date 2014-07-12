@@ -1,5 +1,5 @@
 ﻿function home(req, res) {
-    res.render('home', { title: 'Express' });
+    res.render('home', { title: 'Broadcaster' });
 }
 exports.home = home;
 ;

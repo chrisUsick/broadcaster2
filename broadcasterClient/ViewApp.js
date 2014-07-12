@@ -51,12 +51,13 @@ define(["require", "exports", "Application", "jquery", "ViewManager", 'PeerHandl
         ViewApp.prototype.createPeerSnippet = function (data) {
             var _this = this;
             var ul = $("#broadcastList");
-            var li = $("<li/>", {
+            var li = this.broadcastList.containsKey(data.peerId) ? this.broadcastList.getValue(data.peerId) : $("<li/>", {
                 click: function (e) {
                     _this.views.navigateTo("#watching");
                     _this.connectToBroadcast(data.peerId);
                 }
-            }).append($("<p/>", { text: data.broadcastName })).append($("<p/>", { text: data.description })).append($('<img/>', { src: data.thumbnail })).appendTo(ul)[0];
+            })[0];
+            $(li).append($("<p/>", { text: data.broadcastName })).append($("<p/>", { text: data.description })).append($('<img/>', { src: data.thumbnail })).appendTo(ul);
             this.broadcastList.setValue(data.peerId, li);
         };
         return ViewApp;

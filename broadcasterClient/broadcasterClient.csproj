@@ -30,6 +30,9 @@
     <Content Include="deps\require.js" />
     <TypeScriptCompile Include="ViewManager.ts" />
     <TypeScriptCompile Include="PeerHandler.ts" />
+    <TypeScriptCompile Include="HomeApp.ts" />
+    <Content Include="stylesheets\grid-responsive-min.css" />
+    <Content Include="stylesheets\home.css" />
     <Content Include="TEST-index.html" />
     <TypeScriptCompile Include="main.ts" />
     <Content Include="stylesheets\pure-min.css" />

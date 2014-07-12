@@ -4,7 +4,7 @@
 import e = require('express');
 
 export function home(req: e.Request, res: e.Response) {
-    res.render('home', { title: 'Express' });
+    res.render('home', { title: 'Broadcaster' });
 };
 
 export function broadcast(req: e.Request, res: e.Response) {

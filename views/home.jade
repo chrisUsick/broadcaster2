@@ -1,8 +1,60 @@
 ﻿extends layout
 
+block head
+  
+  link(rel="stylesheet", href="/stylesheets/grid-responsive-min.css")
+  link(rel="stylesheet", href="/stylesheets/home.css")
+  script(src="deps/require.js")
+  script(src='config.js')
+  script
+    :coffee
+      require(['main'])
+
 block body
-  h1= title
-  p Welcome to #{title}
-  a(href='/broadcast') broadcast
-  br
-  a(href='/view') view
+  .header
+    // include this when there is need for it
+    // see http://purecss.io/layouts/marketing/
+    //div(class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-fixed")
+      a.pure-menu-heading(href="/") #{title}
+      ul
+        li 
+          a(href='/') Home
+
+  .splash-container
+    .splash
+      h1.splash-head #{title}
+      p.splash-subhead Create your own live broadcasts for FREE!
+      a.pure-button.pure-button-primary(href="/broadcast") Broadcast
+      a.pure-button.pure-button-primary(href="/view") View
+  .content-wrapper
+    .content
+      h2.content-head.is-center Broadcasting or sharing a live event has never been simpler
+      .pure-g
+        .pure-u-1.pure-u-lg-3-5.pure-u-md-1-2.l-box
+          p
+            :markdown
+              Broadcaster is a website that makes streaming video simple. Simply click "broadcast" at the top of the page and to create
+              your own broadcast.  Then others can view your broadcast by clicking "view". 
+          h3 Features
+          ul
+            li Share video live from your phone or computer
+            li Browse through the broadcasts which are currently playing
+            li Chat about the broadcast in the chat room while watching
+            li 
+              i And many more features to come!
+        .pure-u-1.pure-u-lg-2-5.pure-u-md-1-2.l-box#current
+          h3 current broadcasts
+          ul#broadcastList
+      .ribbon
+      .pure-g.ribbon.l-box-lrg
+        .pure-u-md-1-2.pure-u-1
+          h3.content-head-ribbon Made With PeerJS and WebRTC
+          p 
+            :markdown
+              This site is made With [PeerJS](http://peerjs.com/) and [WebRTC](http://www.webrtc.org/)
+        .pure-u-md-1-2.pure-u-1
+          h3.content-head-ribbon Source code
+          p
+            :markdown
+              the source code is hosted (for now) at my [Github account](https://github.com/chrisUsick/broadcaster2/)
+              Contact me at [christopher.usick@gmail.com](mailto:christopher.usick@gmail.com)
