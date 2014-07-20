@@ -9,7 +9,7 @@ define(["require", "exports", "Application", "jquery", "ViewManager", 'PeerHandl
         __extends(ViewApp, _super);
         function ViewApp() {
             var _this = this;
-            _super.call(this, "192.168.1.47");
+            _super.call(this);
             this.views = new VM("#main > div");
             this.peer = new PeerHandler({ host: "localhost", port: 9000 });
             this.chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer, "anonomous");
@@ -51,12 +51,18 @@ define(["require", "exports", "Application", "jquery", "ViewManager", 'PeerHandl
         ViewApp.prototype.createPeerSnippet = function (data) {
             var _this = this;
             var ul = $("#broadcastList");
+            console.log(this.broadcastList.containsKey(data.peerId));
             var li = this.broadcastList.containsKey(data.peerId) ? this.broadcastList.getValue(data.peerId) : $("<li/>", {
                 click: function (e) {
                     _this.views.navigateTo("#watching");
                     _this.connectToBroadcast(data.peerId);
                 }
             })[0];
+
+            // remove the old content
+            $("*", li).each(function (i, el) {
+                $(el).remove();
+            });
             $(li).append($("<p/>", { text: data.broadcastName })).append($("<p/>", { text: data.description })).append($('<img/>', { src: data.thumbnail })).appendTo(ul);
             this.broadcastList.setValue(data.peerId, li);
         };

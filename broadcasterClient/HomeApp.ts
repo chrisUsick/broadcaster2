@@ -1,11 +1,10 @@
 ﻿import App = require("Application")
 import $ = require("jquery")
 import C = require("collections")
-
 class HomeApp extends App {
 broadcastList: C.Dictionary<string, Element> = new C.Dictionary<string, Element>()
     constructor() {
-        super("192.168.1.47")
+        super()
         this.socket.on('updateBroadcast', (data) => {
             console.log("updateBroadcast", data)
             this.createPeerSnippet(data)

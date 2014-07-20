@@ -51,6 +51,7 @@
     <Content Include="views\broadcast.jade" />
     <Content Include="views\home.jade" />
     <Content Include="views\layout.jade" />
+    <TypeScriptCompile Include="server-config.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />

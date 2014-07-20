@@ -5,7 +5,6 @@ import VM = require("ViewManager")
 import PeerHandler = require('PeerHandler')
 import C = require('collections')
 import ChatRoom = require("ChatRoom")
-
 class ViewApp extends App {
     views: VM = new VM("#main > div")
     peer = new PeerHandler({ host: "localhost", port: 9000 })
@@ -14,7 +13,7 @@ class ViewApp extends App {
     chatRoom: ChatRoom.ChatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer, "anonomous")
     broadcastList: C.Dictionary<string, Element> = new C.Dictionary<string, Element>()
     constructor() {
-        super("192.168.1.47")
+        super()
         this.videoElement = document.createElement("video")
         $("#video-container").append(this.videoElement)
 
@@ -53,6 +52,7 @@ class ViewApp extends App {
     }
     createPeerSnippet(data) {
         var ul = $("#broadcastList")
+        console.log(this.broadcastList.containsKey(data.peerId))
         var li = this.broadcastList.containsKey(data.peerId)  
             ? this.broadcastList.getValue(data.peerId)  
             : $("<li/>", {
@@ -60,7 +60,11 @@ class ViewApp extends App {
                 this.views.navigateTo("#watching")
                 this.connectToBroadcast(data.peerId)
             } 
-        })[0]
+            })[0]
+        // remove the old content
+        $("*", li).each((i, el) => {
+            $(el).remove()
+        })
         $(li).append($("<p/>", { text: data.broadcastName }))
           .append($("<p/>", { text: data.description }))
             .append($('<img/>', { src: data.thumbnail }))

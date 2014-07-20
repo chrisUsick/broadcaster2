@@ -16,7 +16,7 @@ class BroadcastApp extends App {
     chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer)
     messages: Array<ChatRoom.Message> = []
     constructor() {
-        super('192.168.1.47')
+        super()
         this.chatRoom.addNewMessageHandler((msg) => {
             this.peer.sendToAll(msg)
             this.messages.push(msg)

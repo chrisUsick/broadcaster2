@@ -5,7 +5,8 @@
         jquery: "deps/jquery",
         collections: "collections",
         peer: "deps/peer",
-        "socket.io-client": '../socket.io/socket.io'
+        "socket.io-client": '../socket.io/socket.io',
+        "server-config": "./server-config"
     },
     shim: {
         jquery: {
@@ -19,6 +20,9 @@
         },
         "socket.io-client": {
             exports: "io"
+        },
+        "server-config": {
+            exports: "config"
         }
     }
 });

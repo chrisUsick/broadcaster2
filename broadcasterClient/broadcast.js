@@ -7,7 +7,7 @@ define(["require", "exports"], function(require, exports) {
             var _this = this;
             this.capture = document.createElement("button");
             this.canvas = document.createElement("canvas");
-            this.thumbnail = document.createElement("image");
+            this.thumbnail = document.createElement("img");
             this.metaData = {
                 peerId: '',
                 broadcastName: '',

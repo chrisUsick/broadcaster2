@@ -5,6 +5,7 @@
 //    export = Application
 //} 
 import io = require('socket.io-client')
+import config = require("client-config")
 
 class Application {
     socket:io.Socket
@@ -12,8 +13,8 @@ class Application {
     /**
     * @serverHost the host of the server for socket.io connection
     */
-    constructor(serverHost: string) {
-        this.socket=io.connect(serverHost)
+    constructor() {
+        this.socket=io.connect(config.ip)
     }
 }
 export = Application

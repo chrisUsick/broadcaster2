@@ -11,7 +11,7 @@ class Broadcast {
     parent:Element
     capture:HTMLElement = document.createElement("button")
     canvas:HTMLCanvasElement = document.createElement("canvas")
-    thumbnail:HTMLElement = document.createElement("image")
+    thumbnail:HTMLImageElement = document.createElement("img")
     stream: MediaStream
     peer: PeerHandler
     userId: string

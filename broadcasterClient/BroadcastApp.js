@@ -9,7 +9,7 @@ define(["require", "exports", "Application", "Greeter", "jquery", "Broadcast", '
         __extends(BroadcastApp, _super);
         function BroadcastApp() {
             var _this = this;
-            _super.call(this, '192.168.1.47');
+            _super.call(this);
             this.views = new VM("#main > div");
             this.peer = new PeerHandler({ host: "localhost", port: 9000 });
             this.chatRoom = new ChatRoom.ChatRoom($("#chatRoomContainer")[0], this.peer);

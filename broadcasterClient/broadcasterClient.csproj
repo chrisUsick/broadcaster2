@@ -24,6 +24,7 @@
     <TypeScriptCompile Include="BroadcastApp.ts" />
     <TypeScriptCompile Include="Broadcast.ts" />
     <TypeScriptCompile Include="ChatRoom.ts" />
+    <TypeScriptCompile Include="client-config.ts" />
     <Content Include="collections.ts" />
     <Content Include="deps\jquery.js" />
     <Content Include="deps\peer.js" />

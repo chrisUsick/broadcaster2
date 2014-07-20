@@ -9,7 +9,7 @@ define(["require", "exports", "Application", "jquery", "collections"], function(
         __extends(HomeApp, _super);
         function HomeApp() {
             var _this = this;
-            _super.call(this, "192.168.1.47");
+            _super.call(this);
             this.broadcastList = new C.Dictionary();
             this.socket.on('updateBroadcast', function (data) {
                 console.log("updateBroadcast", data);

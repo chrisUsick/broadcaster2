@@ -8,6 +8,7 @@ var methodOverride = require("method-override");
 var errorHandler = require("errorhandler");
 var socket = require('socket.io');
 var C = require('./collections');
+var config = require("./server-config");
 
 var app = express();
 
@@ -34,7 +35,7 @@ app.get('/broadcast', routes.broadcast);
 app.get('/view', routes.view);
 
 var server = http.createServer(app);
-server.listen(parseInt(app.get('port')), "192.168.1.47", function () {
+server.listen(parseInt(app.get('port')), config.ip, function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 var bcIDs = new C.Dictionary();
@@ -58,8 +59,10 @@ io.on("connection", function (socket) {
     });
     socket.on("disconnect", function () {
         console.log('socket disconnected', socket.id);
-        io.sockets.emit("deleteBroadcast", bcIDs.getValue(socket.id));
-        bcIDs.remove(socket.id);
+        if (bcIDs.containsKey(socket.id)) {
+            io.sockets.emit("deleteBroadcast", bcIDs.getValue(socket.id));
+            bcIDs.remove(socket.id);
+        }
     });
 });
 //# sourceMappingURL=app.js.map
