@@ -5,7 +5,7 @@
         * @serverHost the host of the server for socket.io connection
         */
         function Application() {
-            this.socket = io.connect(window.serverIP);
+            this.socket = io.connect("127.0.0.1:1337");
         }
         Application.prototype.run = function () {
         };

@@ -8,7 +8,6 @@ var methodOverride = require("method-override");
 var errorHandler = require("errorhandler");
 var socket = require('socket.io');
 var C = require('./collections');
-var config = require("./server-config");
 
 var app = express();
 
@@ -35,7 +34,7 @@ app.get('/broadcast', routes.broadcast);
 app.get('/view', routes.view);
 
 var server = http.createServer(app);
-server.listen(parseInt(app.get('port')), config.ip, function () {
+server.listen(parseInt(app.get('port')), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 var bcIDs = new C.Dictionary();

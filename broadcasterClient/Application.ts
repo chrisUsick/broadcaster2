@@ -14,7 +14,7 @@ class Application {
     * @serverHost the host of the server for socket.io connection
     */
     constructor() {
-        this.socket=io.connect(window.serverIP)
+        this.socket=io.connect("127.0.0.1:1337")
     }
 }
 export = Application

@@ -6,8 +6,9 @@ block head
   link(rel='stylesheet', href='stylesheets/side-menu.css')
   script(src="deps/require.js")
   script(src='config.js')
+  
   script.
-    window.serverIP = "#{config.ip}"
+    //window.serverIP = "#{config.ip}"
     //console.log(#{config})
     require(['main'])
 

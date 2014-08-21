@@ -36,7 +36,7 @@ app.get('/view', routes.view)
 
 
 var server: http.Server = http.createServer(app)
-server.listen(parseInt(app.get('port')), config.ip, function () {
+server.listen(parseInt(app.get('port')), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 var bcIDs: C.Dictionary<string, any> = new C.Dictionary<string, any>()
