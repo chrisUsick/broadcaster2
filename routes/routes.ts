@@ -2,16 +2,16 @@
  * GET home page.
  */
 import e = require('express');
-import config = require("../server-config")
+//import config = require("../server-config")
 
 export function home(req: e.Request, res: e.Response) {
-    res.render('home', { title: 'Broadcaster' ,config:config});
+    res.render('home', { title: 'Broadcaster'});
 };
 
 export function broadcast(req: e.Request, res: e.Response) {
-    res.render("broadcast", { config: config })
+    res.render("broadcast")
 }
 
 export function view(req, res) {
-    res.render("view", { config: config })
+    res.render("view")
 }
