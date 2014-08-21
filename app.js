@@ -9,6 +9,7 @@ var errorHandler = require("errorhandler");
 var socket = require('socket.io');
 var C = require('./collections');
 
+//import config = require("./server-config")
 var app = express();
 
 // all environments

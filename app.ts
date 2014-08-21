@@ -8,7 +8,7 @@ import methodOverride = require("method-override");
 import errorHandler = require("errorhandler");
 import socket = require('socket.io');
 import C = require('./collections')
-import config = require("./server-config")
+//import config = require("./server-config")
 
 var app = express();
 
