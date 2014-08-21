@@ -1,5 +1,5 @@
 ﻿require.config({
-    baseUrl: "/",
+    baseUrl: "",
     paths: {
         app: "app",
         jquery: "deps/jquery",
