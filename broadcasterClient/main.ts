@@ -1,8 +1,8 @@
 ﻿///<reference path="C:\DefinitelyTyped\requirejs\require.d.ts"/>
 var path = location.pathname
-var appPath = path.match(/[\w]+/)
+var appPath = path.match(/[\w]+/g)
 if (appPath) {
-    var app = appPath[0].toLowerCase()
+    var app = appPath[appPath.length - 1].toLowerCase()
     switch (app) {
     case 'broadcast':
         loadApp("BroadcastApp")
