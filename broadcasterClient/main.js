@@ -1,6 +1,7 @@
 ﻿///<reference path="C:\DefinitelyTyped\requirejs\require.d.ts"/>
 var path = location.pathname;
 var appPath = path.match(/[\w]+/g);
+console.log(appPath);
 if (appPath) {
     var app = appPath[appPath.length - 1].toLowerCase();
     switch (app) {
@@ -11,6 +12,7 @@ if (appPath) {
             loadApp("ViewApp");
             break;
         default:
+            loadApp("HomeApp");
             break;
     }
 } else {
