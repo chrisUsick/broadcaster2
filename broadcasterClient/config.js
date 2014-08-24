@@ -6,7 +6,8 @@
         collections: "collections",
         peer: "deps/peer",
         "socket.io-client": 'deps/socket.io',
-        "server-config": "./server-config"
+        "server-config": "./server-config",
+        "Broadcast": "broadcast"
     },
     shim: {
         jquery: {
