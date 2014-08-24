@@ -28,6 +28,9 @@
                 msg.from = self.chatName;
                 msg.msg = $("input", e.target).val();
 
+                // clear the message input field
+                $("input", e.target).val("");
+
                 // send to broadcast peer
                 if (self.peer.getMainConnection()) {
                     self.peer.sendData(self.peer.getMainConnection().peer, msg);
